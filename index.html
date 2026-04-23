@@ -330,6 +330,11 @@ footer {
 footer .links { display: flex; gap: var(--sc-space-6); }
 footer a { transition: color 0.3s var(--sc-ease-in-out-soft); }
 footer a:hover { color: var(--sc-text); }
+footer .end-of-line {
+  font-family: var(--sc-mono);
+  color: var(--sc-text-tertiary);
+  margin-left: 8px;
+}
 
 /* Motion */
 @keyframes sc-scene-enter {
@@ -487,7 +492,7 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
   </section>
 
   <footer>
-    <div>© 2026 gg-mo. Built with restraint.</div>
+    <div>© 2026 Gao Mo. <span class="end-of-line">// end of line</span></div>
     <div class="links">
       <a href="#top">Back to top</a>
       <a href="https://github.com/gg-mo" target="_blank" rel="noopener">GitHub</a>
