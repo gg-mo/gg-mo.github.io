@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>gg-mo — Work & Projects</title>
-<meta name="description" content="Personal site and project index." />
+<title>Gao Mo</title>
+<meta name="description" content="Gao Mo — personal site." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3Cfilter id='g' x='-50%25' y='-50%25' width='200%25' height='200%25'%3E%3CfeGaussianBlur stdDeviation='2'/%3E%3C/filter%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='10' fill='%234fc3ff' filter='url(%23g)' opacity='0.5'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%234fc3ff'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 :root {
   --sc-bg: #0a0a0b;
@@ -18,11 +19,14 @@
   --sc-text-secondary: rgba(240, 240, 242, 0.6);
   --sc-text-tertiary: rgba(240, 240, 242, 0.35);
   --sc-border: rgba(255, 255, 255, 0.06);
-  --sc-accent: #eef0f5;
+  --sc-accent: #c8e9ff;
+  --sc-accent-deep: #4fc3ff;
+  --sc-accent-glow: rgba(79, 195, 255, 0.35);
+  --sc-grid: rgba(255, 255, 255, 0.05);
 
   --sc-sans: -apple-system, "SF Pro Text", Inter, ui-sans-serif, system-ui, sans-serif;
+  --sc-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --sc-space-2: 8px;
   --sc-space-3: 12px;
   --sc-space-4: 16px;
   --sc-space-6: 24px;
@@ -30,13 +34,9 @@
   --sc-space-12: 48px;
   --sc-space-16: 64px;
   --sc-space-24: 96px;
-  --sc-space-32: 128px;
 
   --sc-radius-sm: 8px;
-  --sc-radius-md: 12px;
   --sc-radius-lg: 16px;
-
-  --sc-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3);
 
   --sc-ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --sc-ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
@@ -44,6 +44,10 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 body {
   background: var(--sc-bg);
   color: var(--sc-text);
@@ -72,6 +76,50 @@ a:focus-visible, button:focus-visible {
   background:
     radial-gradient(ellipse 60% 40% at 50% 0%, rgba(122, 162, 247, 0.06), transparent 70%),
     radial-gradient(ellipse 40% 30% at 50% 100%, rgba(255, 255, 255, 0.02), transparent 70%);
+}
+.backdrop::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background-image:
+    linear-gradient(to right, var(--sc-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--sc-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 85%);
+  transform: translate3d(var(--grid-x, 0), var(--grid-y, 0), 0);
+  will-change: transform;
+}
+
+.viewport-frame {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow:
+    inset 0 0 0 1px rgba(200, 233, 255, 0.04),
+    inset 0 0 80px rgba(79, 195, 255, 0.08);
+  animation: sc-viewport-breath 8s var(--sc-ease-in-out-soft) infinite;
+}
+@keyframes sc-viewport-breath {
+  0%, 100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 233, 255, 0.04),
+      inset 0 0 80px rgba(79, 195, 255, 0.06);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 233, 255, 0.05),
+      inset 0 0 100px rgba(79, 195, 255, 0.10);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewport-frame {
+    animation: none;
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 233, 255, 0.04),
+      inset 0 0 80px rgba(79, 195, 255, 0.08);
+  }
 }
 
 .container {
@@ -112,10 +160,10 @@ nav .links {
   display: flex;
   gap: var(--sc-space-6);
   font-size: 13px;
-  color: var(--sc-text-secondary);
+  color: var(--sc-text-tertiary);
 }
-nav .links a { transition: color 0.3s var(--sc-ease-in-out-soft); }
-nav .links a:hover { color: var(--sc-text); }
+nav .links a { color: var(--sc-text-tertiary); transition: color 0.3s var(--sc-ease-in-out-soft); }
+nav .links a:hover { color: var(--sc-text-secondary); }
 
 /* Hero — focal */
 .hero {
@@ -167,6 +215,7 @@ h1 .muted {
     background 0.3s var(--sc-ease-in-out-soft),
     border-color 0.3s var(--sc-ease-in-out-soft),
     color 0.3s var(--sc-ease-in-out-soft),
+    box-shadow 0.3s var(--sc-ease-in-out-soft),
     transform 0.3s var(--sc-ease-out-soft);
   border: 1px solid transparent;
   cursor: pointer;
@@ -177,7 +226,10 @@ h1 .muted {
   background: var(--sc-accent);
   color: #0a0a0b;
 }
-.btn.primary:hover { transform: translateY(-1px); }
+.btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px var(--sc-accent-glow);
+}
 .btn.ghost {
   border-color: var(--sc-border);
   color: var(--sc-text-secondary);
@@ -186,8 +238,41 @@ h1 .muted {
   color: var(--sc-text);
   border-color: rgba(255, 255, 255, 0.14);
 }
+.hero .btn.primary {
+  background: transparent;
+  color: var(--sc-text-secondary);
+  border-color: rgba(200, 233, 255, 0.25);
+  padding: 10px 16px;
+  font-size: 13px;
+}
+.hero .btn.primary:hover {
+  background: transparent;
+  color: var(--sc-text);
+  border-color: rgba(200, 233, 255, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px var(--sc-accent-glow);
+}
 .btn .arrow { transition: transform 0.3s var(--sc-ease-out-soft); }
 .btn:hover .arrow { transform: translateX(3px); }
+.scroll-cue {
+  margin-top: var(--sc-space-12);
+  font-size: 16px;
+  color: var(--sc-text-tertiary);
+  transition: opacity 0.3s var(--sc-ease-in-out-soft);
+}
+.scroll-cue.reveal {
+  animation:
+    sc-fade-up 0.6s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 200ms) forwards,
+    sc-bounce 2s var(--sc-ease-in-out-soft) calc(var(--d, 0) * 120ms + 800ms) infinite;
+}
+.scroll-cue.hidden { opacity: 0; }
+@keyframes sc-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
+}
 
 /* Section scaffold */
 section {
@@ -200,6 +285,30 @@ section {
   padding-bottom: var(--sc-space-8);
   margin-bottom: var(--sc-space-8);
   border-bottom: 1px solid var(--sc-border);
+  position: relative;
+}
+.section-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sc-accent-glow), transparent);
+  opacity: 0;
+  transition: opacity 0.6s var(--sc-ease-in-out-soft);
+}
+.section-head.shown::after {
+  opacity: 1;
+  animation: sc-scanline-fade 1.8s var(--sc-ease-in-out-soft) forwards;
+}
+@keyframes sc-scanline-fade {
+  0%   { opacity: 0; }
+  33%  { opacity: 1; }
+  100% { opacity: 0.15; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-head::after { animation: none; opacity: 0.15; }
 }
 .section-head h2 {
   font-size: 32px;
@@ -233,17 +342,35 @@ section {
   transition:
     background 0.4s var(--sc-ease-in-out-soft),
     border-color 0.4s var(--sc-ease-in-out-soft),
+    box-shadow 0.4s var(--sc-ease-in-out-soft),
     transform 0.5s var(--sc-ease-out-soft);
   grid-column: span 6;
 }
-.card.wide { grid-column: span 12; min-height: 340px; }
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(200, 233, 255, 0.12),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s var(--sc-ease-in-out-soft);
+}
+.card:hover::before { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .card::before { display: none; }
+}
 @media (max-width: 760px) {
   .card { grid-column: span 12; }
 }
 .card:hover {
   background: var(--sc-surface-2);
-  border-color: rgba(255, 255, 255, 0.10);
+  border-color: rgba(200, 233, 255, 0.18);
   transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(200, 233, 255, 0.08), 0 12px 40px var(--sc-accent-glow);
 }
 .card .tag {
   font-size: 12px;
@@ -283,6 +410,58 @@ section {
 .card:hover .meta .view { color: var(--sc-text); }
 .card .meta .view .arrow { transition: transform 0.3s var(--sc-ease-out-soft); }
 .card:hover .meta .view .arrow { transform: translateX(3px); }
+.card .window-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sc-space-4);
+}
+.card .dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.card .dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sc-surface-3);
+}
+.card .lang {
+  font-family: var(--sc-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--sc-text-tertiary);
+}
+.card .path {
+  font-family: var(--sc-mono);
+  font-size: 13px;
+  color: var(--sc-text-secondary);
+  margin-bottom: var(--sc-space-4);
+}
+.card .path .prefix {
+  color: var(--sc-accent-deep);
+}
+.card .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--sc-space-4);
+}
+.card .chip {
+  font-family: var(--sc-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--sc-text-secondary);
+  padding: 3px 8px;
+  border: 1px solid var(--sc-border);
+  border-radius: 999px;
+  background: var(--sc-surface-2);
+}
+.card .meta .updated {
+  font-family: var(--sc-mono);
+  font-size: 12px;
+  color: var(--sc-text-tertiary);
+}
 
 /* About */
 .about {
@@ -326,6 +505,11 @@ footer {
 footer .links { display: flex; gap: var(--sc-space-6); }
 footer a { transition: color 0.3s var(--sc-ease-in-out-soft); }
 footer a:hover { color: var(--sc-text); }
+footer .end-of-line {
+  font-family: var(--sc-mono);
+  color: var(--sc-text-tertiary);
+  margin-left: 8px;
+}
 
 /* Motion */
 @keyframes sc-scene-enter {
@@ -341,6 +525,36 @@ footer a:hover { color: var(--sc-text); }
   to   { opacity: 1; }
 }
 
+@keyframes sc-shimmer {
+  0%   { background-position: -150% 0; }
+  100% { background-position: 250% 0; }
+}
+.hero h1.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--sc-text) 0%,
+    var(--sc-text) 40%,
+    var(--sc-accent-deep) 50%,
+    var(--sc-text) 60%,
+    var(--sc-text) 100%
+  );
+  background-size: 200% 100%;
+  background-position: -150% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation:
+    sc-fade-up 0.6s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 200ms) forwards,
+    sc-shimmer 1.2s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 800ms) 1 forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero h1.shimmer {
+    background: none;
+    color: var(--sc-text);
+    animation: none;
+  }
+}
+
 body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 
@@ -353,14 +567,25 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 
 .in-view {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(32px) scale(0.98);
   transition:
-    opacity 0.6s var(--sc-ease-out-soft),
-    transform 0.6s var(--sc-ease-out-soft);
+    opacity 0.8s var(--sc-ease-out-soft),
+    transform 0.8s var(--sc-ease-out-soft);
 }
 .in-view.shown {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+}
+.card.in-view.shown {
+  animation: sc-card-flash 1.2s var(--sc-ease-out-soft) 0s 1;
+}
+@keyframes sc-card-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(79, 195, 255, 0); }
+  40%  { box-shadow: 0 0 28px 2px var(--sc-accent-glow); }
+  100% { box-shadow: 0 0 0 0 rgba(79, 195, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card.in-view.shown { animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -371,90 +596,110 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 </head>
 <body>
 <div class="backdrop" aria-hidden="true"></div>
+<div class="viewport-frame" aria-hidden="true"></div>
 
 <nav class="top">
-  <div class="mark"><span class="dot"></span>gg-mo</div>
+  <div class="mark"><span class="dot"></span>Gao Mo</div>
   <div class="links">
     <a href="#work">Work</a>
     <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+    <a href="#links">Links</a>
   </div>
 </nav>
 
 <main class="container">
 
   <section class="hero" id="top">
-    <div class="eyebrow reveal" style="--d:0">Personal index — 2026</div>
-    <h1 class="reveal" style="--d:1">
-      Building quiet tools<br/>
-      <span class="muted">for loud problems.</span>
-    </h1>
-    <p class="lede reveal" style="--d:2">
-      I design and ship software at the edge of craft and systems — interfaces, infrastructure, and everything between.
-    </p>
-    <div class="cta-row reveal" style="--d:3">
+    <h1 class="reveal shimmer" style="--d:0">I build.</h1>
+    <div class="cta-row reveal" style="--d:1">
       <a class="btn primary" href="#work">
         See the work
         <span class="arrow" aria-hidden="true">→</span>
       </a>
-      <a class="btn ghost" href="#contact">Get in touch</a>
     </div>
+    <div class="scroll-cue reveal" style="--d:2" aria-hidden="true">↓</div>
   </section>
 
   <section id="work">
     <div class="section-head in-view">
-      <h2>Selected projects</h2>
-      <span class="kicker">2023 — 2026</span>
+      <h2>Selected work</h2>
+      <span class="kicker">2025 — 2026</span>
     </div>
 
     <div class="grid">
-      <a class="card wide in-view" href="#" aria-label="Project one">
-        <div class="tag">Featured · Platform</div>
-        <h3>Project One</h3>
-        <p>A concise one-line framing of what the project is and why it matters. Swap this text for your own.</p>
+      <a class="card in-view" href="https://github.com/gg-mo/second-thought-agent-skill" target="_blank" rel="noopener" aria-label="second-thought-agent-skill — critique-first agent skill">
+        <div class="window-chrome">
+          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="lang" aria-label="Primary language: Python">Python</span>
+        </div>
+        <div class="path"><span class="prefix">~/</span>gg-mo/second-thought-agent-skill</div>
+        <h3>second-thought-agent-skill</h3>
+        <p>A critique-first agent skill that challenges every decision before execution — catching flaws, surfacing risks, and improving outcomes in real time.</p>
+        <div class="chips">
+          <span class="chip">agent-skill</span>
+          <span class="chip">ai-safety</span>
+          <span class="chip">claude-code</span>
+        </div>
         <div class="meta">
-          <span>Case study</span>
-          <span class="view">Read <span class="arrow" aria-hidden="true">→</span></span>
+          <span class="updated">Updated Apr 2026</span>
+          <span class="view">View <span class="arrow" aria-hidden="true">→</span></span>
         </div>
       </a>
 
-      <a class="card in-view" href="#">
-        <div class="tag">Product</div>
-        <h3>Project Two</h3>
-        <p>Short, specific description. Focus on the outcome, not the stack.</p>
+      <a class="card in-view" href="https://github.com/gg-mo/stagecraft-agent-skill" target="_blank" rel="noopener" aria-label="stagecraft-agent-skill — keynote-style UI plugin">
+        <div class="window-chrome">
+          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="lang" aria-label="Primary language: Shell">Shell</span>
+        </div>
+        <div class="path"><span class="prefix">~/</span>gg-mo/stagecraft-agent-skill</div>
+        <h3>stagecraft-agent-skill</h3>
+        <p>Claude Code plugin for premium, keynote-style UI — dark, minimal, cinematic reveals with disciplined motion.</p>
+        <div class="chips">
+          <span class="chip">claude-code-plugin</span>
+          <span class="chip">motion-design</span>
+          <span class="chip">design-system</span>
+        </div>
         <div class="meta">
-          <span>2025</span>
-          <span class="view">Read <span class="arrow" aria-hidden="true">→</span></span>
+          <span class="updated">Updated Apr 2026</span>
+          <span class="view">View <span class="arrow" aria-hidden="true">→</span></span>
         </div>
       </a>
 
-      <a class="card in-view" href="#">
-        <div class="tag">Experiment</div>
-        <h3>Project Three</h3>
-        <p>A sentence that earns interest without overselling.</p>
+      <a class="card in-view" href="https://github.com/gg-mo/agent-tea" target="_blank" rel="noopener" aria-label="agent-tea — AI personality test">
+        <div class="window-chrome">
+          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="lang" aria-label="Primary language: TypeScript">TypeScript</span>
+        </div>
+        <div class="path"><span class="prefix">~/</span>gg-mo/agent-tea</div>
+        <h3>agent-tea</h3>
+        <p>A personality test where AI agents and chatbots spill the tea on their humans.</p>
+        <div class="chips">
+          <span class="chip">ai-personality-test</span>
+          <span class="chip">nextjs</span>
+          <span class="chip">supabase</span>
+        </div>
         <div class="meta">
-          <span>2024</span>
-          <span class="view">Read <span class="arrow" aria-hidden="true">→</span></span>
+          <span class="updated">Updated Apr 2026</span>
+          <span class="view">View <span class="arrow" aria-hidden="true">→</span></span>
         </div>
       </a>
 
-      <a class="card in-view" href="#">
-        <div class="tag">Open source</div>
-        <h3>Project Four</h3>
-        <p>Describe the problem it solves in plain language.</p>
-        <div class="meta">
-          <span>Ongoing</span>
-          <span class="view">Read <span class="arrow" aria-hidden="true">→</span></span>
+      <a class="card in-view" href="https://github.com/NoTestsNoFear/Flexing" target="_blank" rel="noopener" aria-label="Flexing — feed-first community platform">
+        <div class="window-chrome">
+          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="lang" aria-label="Primary language: TypeScript">TypeScript</span>
         </div>
-      </a>
-
-      <a class="card in-view" href="#">
-        <div class="tag">Writing</div>
-        <h3>Project Five</h3>
-        <p>Essay or talk — why it's worth a reader's minute.</p>
+        <div class="path"><span class="prefix">~/</span>NoTestsNoFear/Flexing</div>
+        <h3>Flexing</h3>
+        <p>Flex. Roast. Build. — the feed-first community where humans and AI agents show their work, get roasted, build reputation, and get hired.</p>
+        <div class="chips">
+          <span class="chip">ai-agents</span>
+          <span class="chip">community-platform</span>
+          <span class="chip">mcp</span>
+        </div>
         <div class="meta">
-          <span>2024</span>
-          <span class="view">Read <span class="arrow" aria-hidden="true">→</span></span>
+          <span class="updated">Updated Apr 2026</span>
+          <span class="view">View <span class="arrow" aria-hidden="true">→</span></span>
         </div>
       </a>
     </div>
@@ -468,32 +713,30 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
     <div class="about in-view">
       <div class="label">Notes</div>
       <div>
-        <p>I care about tools that feel inevitable — the kind where the right thing is also the obvious one.</p>
-        <p>Currently exploring interfaces for AI systems, developer tooling, and the quieter parts of design engineering. Based on the internet.</p>
+        <p>I build tools for thinking — agent skills, ML systems, and the quiet interfaces that make models feel inevitable.</p>
       </div>
     </div>
   </section>
 
-  <section id="contact">
+  <section id="links">
     <div class="section-head in-view">
-      <h2>Contact</h2>
+      <h2>Links</h2>
       <span class="kicker">Open inbox</span>
     </div>
     <div class="about in-view">
       <div class="label">Reach out</div>
       <div>
-        <p>The fastest way is email.</p>
         <p>
-          <a href="mailto:hello@example.com">hello@example.com</a> ·
+          <a href="https://www.linkedin.com/in/gao-mo/" target="_blank" rel="noopener">LinkedIn</a> ·
           <a href="https://github.com/gg-mo" target="_blank" rel="noopener">GitHub</a> ·
-          <a href="#" target="_blank" rel="noopener">Twitter</a>
+          <a href="mailto:happyhhour123@gmail.com">happyhhour123@gmail.com</a>
         </p>
       </div>
     </div>
   </section>
 
   <footer>
-    <div>© 2026 gg-mo. Built with restraint.</div>
+    <div>© 2026 Gao Mo. <span class="end-of-line">// end of line</span></div>
     <div class="links">
       <a href="#top">Back to top</a>
       <a href="https://github.com/gg-mo" target="_blank" rel="noopener">GitHub</a>
@@ -517,6 +760,78 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
     el.style.transitionDelay = (i % 6) * 80 + 'ms';
     io.observe(el);
   });
+
+  // Grid backdrop mouse parallax (skipped under reduced motion)
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const backdrop = document.querySelector('.backdrop');
+  if (!reduceMotion && backdrop) {
+    let tx = 0, ty = 0, rx = 0, ry = 0, raf = 0;
+    const MAX = 4;
+    const tick = () => {
+      rx += (tx - rx) * 0.08;
+      ry += (ty - ry) * 0.08;
+      backdrop.style.setProperty('--grid-x', rx.toFixed(2) + 'px');
+      backdrop.style.setProperty('--grid-y', ry.toFixed(2) + 'px');
+      if (Math.abs(tx - rx) > 0.05 || Math.abs(ty - ry) > 0.05) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = 0;
+      }
+    };
+    window.addEventListener('mousemove', (e) => {
+      const cx = e.clientX / window.innerWidth - 0.5;
+      const cy = e.clientY / window.innerHeight - 0.5;
+      tx = -cx * MAX * 2;
+      ty = -cy * MAX * 2;
+      if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+  }
+
+  // Hero shimmer one-shot: after animation, drop shimmer class so text stays solid
+  const heroH1 = document.querySelector('.hero h1.shimmer');
+  if (heroH1) {
+    heroH1.addEventListener('animationend', (e) => {
+      if (e.animationName === 'sc-shimmer') {
+        heroH1.classList.remove('shimmer');
+      }
+    });
+  }
+
+  // Card cursor-follow spotlight (skipped under reduced motion)
+  if (!reduceMotion) {
+    document.querySelectorAll('.card').forEach((card) => {
+      let pending = false;
+      card.addEventListener('mousemove', (e) => {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          card.style.setProperty('--mx', x + '%');
+          card.style.setProperty('--my', y + '%');
+          pending = false;
+        });
+      }, { passive: true });
+    });
+  }
+
+  // Scroll cue: fade the chevron once the user has scrolled past the hero
+  const scrollCue = document.querySelector('.scroll-cue');
+  if (scrollCue) {
+    const THRESHOLD = 120;
+    let ticking = false;
+    const update = () => {
+      scrollCue.classList.toggle('hidden', window.scrollY > THRESHOLD);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+  }
 </script>
 
 </body>
