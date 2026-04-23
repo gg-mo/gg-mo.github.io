@@ -152,45 +152,58 @@ body.cursor-active .cursor-light { opacity: 1; }
 
 /* Hero — focal */
 .hero {
-  padding: var(--sc-space-24) 0 var(--sc-space-16);
+  min-height: 100svh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   text-align: center;
 }
-.eyebrow {
-  display: inline-block;
-  font-size: 13px;
-  color: var(--sc-text-tertiary);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: var(--sc-space-6);
-}
 h1 {
-  font-size: clamp(40px, 7vw, 72px);
-  line-height: 1.02;
-  letter-spacing: -0.025em;
+  font-size: clamp(64px, 14vw, 168px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
   font-weight: 500;
-  margin: 0 0 var(--sc-space-6);
+  margin: 0;
 }
-h1 .muted {
-  color: var(--sc-text-secondary);
-  font-weight: 400;
+.hero h1 .letter,
+.hero h1 .caret {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  animation: sc-letter-rise 0.75s var(--sc-ease-out-soft) forwards;
+  animation-delay: calc(200ms + var(--i, 0) * 55ms);
 }
-.lede {
-  max-width: 560px;
-  margin: 0 auto;
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--sc-text-secondary);
+.hero h1 .caret {
+  animation:
+    sc-letter-rise 0.75s var(--sc-ease-out-soft) calc(200ms + var(--i, 0) * 55ms) forwards,
+    sc-caret-blink 1.05s steps(1, end) calc(200ms + var(--i, 0) * 55ms + 750ms) infinite;
+}
+@keyframes sc-letter-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 .letter,
+  .hero h1 .caret { animation: none; opacity: 1; transform: none; }
+  .hero h1 .caret { opacity: 0.7; }
 }
 .scroll-cue {
-  margin-top: var(--sc-space-12);
+  position: absolute;
+  bottom: var(--sc-space-12);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
   font-size: 16px;
   color: var(--sc-text-tertiary);
   transition: opacity 0.3s var(--sc-ease-in-out-soft);
 }
 .scroll-cue.reveal {
   animation:
-    sc-fade-up 0.6s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 200ms) forwards,
-    sc-bounce 2s var(--sc-ease-in-out-soft) calc(var(--d, 0) * 120ms + 800ms) infinite;
+    sc-fade-up 0.6s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 1200ms) forwards,
+    sc-bounce 2s var(--sc-ease-in-out-soft) calc(var(--d, 0) * 120ms + 1800ms) infinite;
 }
 .scroll-cue.hidden { opacity: 0; }
 @keyframes sc-bounce {
@@ -238,10 +251,12 @@ section {
   .section-head::after { animation: none; opacity: 0.15; }
 }
 .section-head h2 {
-  font-size: 32px;
+  font-size: 13px;
   line-height: 1.15;
-  letter-spacing: -0.015em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   font-weight: 500;
+  color: var(--sc-text-tertiary);
   margin: 0;
 }
 .section-head .kicker {
@@ -478,10 +493,10 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 
 .in-view {
   opacity: 0;
-  transform: translateY(32px) scale(0.98);
+  transform: translateY(56px) scale(0.96);
   transition:
-    opacity 0.8s var(--sc-ease-out-soft),
-    transform 0.8s var(--sc-ease-out-soft);
+    opacity 0.9s var(--sc-ease-out-soft),
+    transform 0.9s var(--sc-ease-out-soft);
 }
 .in-view.shown {
   opacity: 1;
@@ -513,7 +528,9 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 <main class="container">
 
   <section class="hero" id="top">
-    <h1 class="reveal" style="--d:0">I build.<span class="caret" aria-hidden="true">_</span></h1>
+    <h1 aria-label="I build.">
+      <span class="letter" style="--i:0" aria-hidden="true">I</span><span class="letter" style="--i:1" aria-hidden="true">&nbsp;</span><span class="letter" style="--i:2" aria-hidden="true">b</span><span class="letter" style="--i:3" aria-hidden="true">u</span><span class="letter" style="--i:4" aria-hidden="true">i</span><span class="letter" style="--i:5" aria-hidden="true">l</span><span class="letter" style="--i:6" aria-hidden="true">d</span><span class="letter" style="--i:7" aria-hidden="true">.</span><span class="caret" style="--i:8" aria-hidden="true">_</span>
+    </h1>
     <div class="scroll-cue reveal" style="--d:2" aria-hidden="true">↓</div>
   </section>
 
