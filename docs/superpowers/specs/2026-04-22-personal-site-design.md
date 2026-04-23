@@ -46,12 +46,14 @@ Site combines:
 
 Four project cards, pulled from:
 
-| # | Repo | Title shown | Description | Chips (from GitHub topics) | Layout |
-|---|---|---|---|---|---|
-| 1 | `gg-mo/second-thought-agent-skill` | `second-thought-agent-skill` | A critique-first agent skill that challenges every decision before execution — catching flaws, surfacing risks, and improving outcomes in real time. | `agent-skill` · `ai-safety` · `claude-code` | **wide** (full row) |
-| 2 | `gg-mo/stagecraft-agent-skill` | `stagecraft-agent-skill` | Claude Code plugin for premium, keynote-style UI — dark, minimal, cinematic reveals with disciplined motion. | `claude-code-plugin` · `motion-design` · `design-system` | 1/3 |
-| 3 | `gg-mo/agent-tea` | `agent-tea` | A personality test where AI agents and chatbots spill the tea on their humans. | `ai-personality-test` · `nextjs` · `supabase` | 1/3 |
-| 4 | `NoTestsNoFear/Flexing` | `Flexing` | Flex. Roast. Build. — the feed-first community where humans and AI agents show their work, get roasted, build reputation, and get hired. | `ai-agents` · `community-platform` · `mcp` | 1/3 |
+All four cards are the **same size** — no featured/wide card.
+
+| # | Repo | Title shown | Description | Chips (from GitHub topics) |
+|---|---|---|---|---|
+| 1 | `gg-mo/second-thought-agent-skill` | `second-thought-agent-skill` | A critique-first agent skill that challenges every decision before execution — catching flaws, surfacing risks, and improving outcomes in real time. | `agent-skill` · `ai-safety` · `claude-code` |
+| 2 | `gg-mo/stagecraft-agent-skill` | `stagecraft-agent-skill` | Claude Code plugin for premium, keynote-style UI — dark, minimal, cinematic reveals with disciplined motion. | `claude-code-plugin` · `motion-design` · `design-system` |
+| 3 | `gg-mo/agent-tea` | `agent-tea` | A personality test where AI agents and chatbots spill the tea on their humans. | `ai-personality-test` · `nextjs` · `supabase` |
+| 4 | `NoTestsNoFear/Flexing` | `Flexing` | Flex. Roast. Build. — the feed-first community where humans and AI agents show their work, get roasted, build reputation, and get hired. | `ai-agents` · `community-platform` · `mcp` |
 
 Card content is **hardcoded in HTML** (not fetched at runtime) — values copied from GitHub repo metadata at build/edit time. Acceptable because the repo set is small and changes rarely; avoids an API dependency and keeps the page fully static.
 
@@ -156,7 +158,7 @@ The existing `border-bottom` under `.section-head` gains a companion **scanline*
 
 ### 5.7 Grid layout for cards
 
-Unchanged from current template: 12-col grid. Card 1 spans 12 (`wide`). Cards 2–4 share the next row — each spans 4. Breakpoint: below 760px, all cards stack full-width (matches existing behavior).
+12-col grid. **All four cards span 6 cols** — forming a 2×2 grid on desktop. The `.card.wide` modifier from the current template is removed (all cards use the default size). Gap between cards stays at `var(--sc-space-4)` (16px). Breakpoint: below 760px, all cards stack full-width.
 
 ## 6. Typography
 
