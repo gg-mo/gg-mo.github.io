@@ -424,6 +424,34 @@ footer .end-of-line {
   to   { opacity: 1; }
 }
 
+@keyframes sc-shimmer {
+  0%   { background-position: -150% 0; }
+  100% { background-position: 250% 0; }
+}
+.hero h1.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--sc-text) 0%,
+    var(--sc-text) 40%,
+    var(--sc-accent-deep) 50%,
+    var(--sc-text) 60%,
+    var(--sc-text) 100%
+  );
+  background-size: 200% 100%;
+  background-position: -150% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sc-shimmer 1.2s var(--sc-ease-out-soft) 0.6s 1 forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero h1.shimmer {
+    background: none;
+    color: var(--sc-text);
+    animation: none;
+  }
+}
+
 body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 
@@ -468,7 +496,7 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 <main class="container">
 
   <section class="hero" id="top">
-    <h1 class="reveal" style="--d:0">I build.</h1>
+    <h1 class="reveal shimmer" style="--d:0">I build.</h1>
     <div class="cta-row reveal" style="--d:1">
       <a class="btn primary" href="#work">
         See the work
@@ -617,6 +645,16 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
       ty = -cy * MAX * 2;
       if (!raf) raf = requestAnimationFrame(tick);
     }, { passive: true });
+  }
+
+  // Hero shimmer one-shot: after animation, drop shimmer class so text stays solid
+  const heroH1 = document.querySelector('.hero h1.shimmer');
+  if (heroH1) {
+    heroH1.addEventListener('animationend', (e) => {
+      if (e.animationName === 'sc-shimmer') {
+        heroH1.classList.remove('shimmer');
+      }
+    });
   }
 
   // Scroll cue: fade the chevron once the user has scrolled past the hero
