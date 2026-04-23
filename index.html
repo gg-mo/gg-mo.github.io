@@ -568,14 +568,25 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 
 .in-view {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(32px) scale(0.98);
   transition:
-    opacity 0.6s var(--sc-ease-out-soft),
-    transform 0.6s var(--sc-ease-out-soft);
+    opacity 0.8s var(--sc-ease-out-soft),
+    transform 0.8s var(--sc-ease-out-soft);
 }
 .in-view.shown {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+}
+.card.in-view.shown {
+  animation: sc-card-flash 1.2s var(--sc-ease-out-soft) 0s 1;
+}
+@keyframes sc-card-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(79, 195, 255, 0); }
+  40%  { box-shadow: 0 0 28px 2px var(--sc-accent-glow); }
+  100% { box-shadow: 0 0 0 0 rgba(79, 195, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card.in-view.shown { animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
