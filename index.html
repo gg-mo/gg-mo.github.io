@@ -646,21 +646,52 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script>
-  // Scroll reveal — single observer, single pattern.
-  const io = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      if (e.isIntersecting) {
-        e.target.classList.add('shown');
-        io.unobserve(e.target);
-      }
-    }
-  }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+  // Scroll reveal — GSAP ScrollTrigger.batch if available, IntersectionObserver fallback.
+  const _reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const _useGsap = !_reduce && window.gsap && window.ScrollTrigger;
 
-  document.querySelectorAll('.in-view').forEach((el, i) => {
-    el.style.transitionDelay = (i % 6) * 80 + 'ms';
-    io.observe(el);
-  });
+  if (_useGsap) {
+    gsap.registerPlugin(ScrollTrigger);
+    // Neutralize the CSS transition so GSAP fully owns these properties.
+    document.querySelectorAll('.in-view').forEach((el) => {
+      el.style.transition = 'none';
+    });
+    gsap.set('.in-view', { opacity: 0, y: 48, filter: 'blur(6px)', scale: 0.985 });
+    ScrollTrigger.batch('.in-view', {
+      start: 'top 88%',
+      once: true,
+      onEnter: (batch) => {
+        batch.forEach((el) => el.classList.add('shown')); // keeps scanline + card-flash in sync
+        gsap.to(batch, {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          scale: 1,
+          duration: 1.0,
+          ease: 'power3.out',
+          stagger: { each: 0.09, from: 'start' },
+          overwrite: 'auto',
+        });
+      },
+    });
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('shown');
+          io.unobserve(e.target);
+        }
+      }
+    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.in-view').forEach((el, i) => {
+      el.style.transitionDelay = (i % 6) * 80 + 'ms';
+      io.observe(el);
+    });
+  }
 
   // Grid backdrop mouse parallax (skipped under reduced motion)
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
