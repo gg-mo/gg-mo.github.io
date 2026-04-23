@@ -358,6 +358,11 @@ section {
   justify-content: space-between;
   margin-bottom: var(--sc-space-4);
 }
+.card .chrome-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
 .card .dots {
   display: inline-flex;
   gap: 6px;
@@ -367,6 +372,33 @@ section {
   height: 8px;
   border-radius: 50%;
   background: var(--sc-surface-3);
+}
+.card .module-index {
+  font-family: var(--sc-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sc-text-tertiary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.card .module-index::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--sc-accent-deep);
+  box-shadow: 0 0 6px var(--sc-accent-glow);
+  opacity: 0.8;
+}
+.card .module-role {
+  font-family: var(--sc-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--sc-text-secondary);
+  margin-bottom: var(--sc-space-3);
+  text-transform: lowercase;
 }
 .card .lang {
   font-family: var(--sc-mono);
@@ -543,11 +575,15 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
     <div class="grid">
       <a class="card in-view" href="https://github.com/gg-mo/second-thought-agent-skill" target="_blank" rel="noopener" aria-label="second-thought-agent-skill — critique-first agent skill">
         <div class="window-chrome">
-          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="chrome-left">
+            <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="module-index" aria-hidden="true">Module 01</span>
+          </span>
           <span class="lang" aria-label="Primary language: Python">Python</span>
         </div>
         <div class="path"><span class="prefix">~/</span>gg-mo/second-thought-agent-skill</div>
         <h3>second-thought-agent-skill</h3>
+        <div class="module-role">critique layer for coding agents</div>
         <p>A critique-first agent skill that challenges every decision before execution — catching flaws, surfacing risks, and improving outcomes in real time.</p>
         <div class="chips">
           <span class="chip">agent-skill</span>
@@ -562,11 +598,15 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 
       <a class="card in-view" href="https://github.com/gg-mo/stagecraft-agent-skill" target="_blank" rel="noopener" aria-label="stagecraft-agent-skill — keynote-style UI plugin">
         <div class="window-chrome">
-          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="chrome-left">
+            <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="module-index" aria-hidden="true">Module 02</span>
+          </span>
           <span class="lang" aria-label="Primary language: Shell">Shell</span>
         </div>
         <div class="path"><span class="prefix">~/</span>gg-mo/stagecraft-agent-skill</div>
         <h3>stagecraft-agent-skill</h3>
+        <div class="module-role">taste layer for premium frontend animation</div>
         <p>Claude Code plugin for premium, keynote-style UI — dark, minimal, cinematic reveals with disciplined motion.</p>
         <div class="chips">
           <span class="chip">claude-code-plugin</span>
@@ -581,11 +621,15 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 
       <a class="card in-view" href="https://github.com/gg-mo/agent-tea" target="_blank" rel="noopener" aria-label="agent-tea — AI personality test">
         <div class="window-chrome">
-          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="chrome-left">
+            <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="module-index" aria-hidden="true">Module 03</span>
+          </span>
           <span class="lang" aria-label="Primary language: TypeScript">TypeScript</span>
         </div>
         <div class="path"><span class="prefix">~/</span>gg-mo/agent-tea</div>
         <h3>agent-tea</h3>
+        <div class="module-role">personality feedback for AI agents</div>
         <p>A personality test where AI agents and chatbots spill the tea on their humans.</p>
         <div class="chips">
           <span class="chip">ai-personality-test</span>
@@ -600,11 +644,15 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
 
       <a class="card in-view" href="https://github.com/NoTestsNoFear/Flexing" target="_blank" rel="noopener" aria-label="Flexing — feed-first community platform">
         <div class="window-chrome">
-          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="chrome-left">
+            <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="module-index" aria-hidden="true">Module 04</span>
+          </span>
           <span class="lang" aria-label="Primary language: TypeScript">TypeScript</span>
         </div>
         <div class="path"><span class="prefix">~/</span>NoTestsNoFear/Flexing</div>
         <h3>Flexing</h3>
+        <div class="module-role">social marketplace for humans and agents</div>
         <p>Flex. Roast. Build. — the feed-first community where humans and AI agents show their work, get roasted, build reputation, and get hired.</p>
         <div class="chips">
           <span class="chip">ai-agents</span>
