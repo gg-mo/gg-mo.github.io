@@ -144,10 +144,36 @@ Card behavior:
 - Hover: **cursor-follow spotlight** — a radial gradient mask inside the card at the pointer position, ~18% opacity cyan. Implemented with a `::before` layer using CSS variables updated from a `mousemove` handler (throttled via `requestAnimationFrame`). Disabled under `prefers-reduced-motion`.
 - Click: opens the repo URL in a new tab (`target="_blank"`, `rel="noopener"`).
 
-### 5.5 CTA button
+### 5.5 CTA button — demoted for hero dominance
 
-- Primary button keeps `--sc-accent` background and dark text.
-- On hover: existing `translateY(-1px)` is kept. **Add** a soft cyan halo via `box-shadow: 0 0 24px var(--sc-accent-glow)`, fading in over 300ms.
+"I build." must be unambiguously the loudest element on the page. To enforce this, the primary CTA under the hero is **demoted to a ghost-style outline button**:
+
+- Background: transparent (not `var(--sc-accent)` filled).
+- Border: `1px solid rgba(200, 233, 255, 0.25)` (thin cyan hairline).
+- Text color: `var(--sc-text-secondary)` at rest.
+- Padding: reduced to `10px 16px` (from `12px 20px`).
+- Font size: `13px` (from `14px`).
+- On hover: border and text brighten to `var(--sc-text)`; a **soft cyan halo** fades in via `box-shadow: 0 0 20px var(--sc-accent-glow)` over 300ms. Existing `translateY(-1px)` lift is kept.
+- The `.btn.primary` class keeps its name (no CSS rename needed) — its filled-background rule is overridden inside the hero context by `.hero .btn.primary { ... }` scoping.
+
+Nav links are dimmed one step further: from `--sc-text-secondary` (60%) to `--sc-text-tertiary` (35%) at rest, lifting to `--sc-text-secondary` on hover. This maintains a clear visual hierarchy: `I build.` > everything else.
+
+### 5.5a Scroll cue
+
+A small animated chevron sits ~48px below the CTA row:
+- Glyph: `↓` rendered at 16px, `var(--sc-text-tertiary)` color.
+- Animation: gentle 2s `sc-bounce` — `translateY(0)` ↔ `translateY(6px)`, infinite, easing out/in.
+- Fades to opacity 0 over 300ms once the user has scrolled >120px. Re-shows if the user scrolls back to the top.
+- Disabled (static, no bounce) under `prefers-reduced-motion`.
+
+### 5.5b Viewport border glow
+
+A fixed overlay renders a very subtle cyan glow along the inner edge of the viewport, suggesting a contained screen frame:
+- `.viewport-frame` element, `position: fixed; inset: 0; pointer-events: none; z-index: 3` (above backdrop and content, but since it has no pointer events and no solid fill, it never blocks interactions).
+- Primary effect: `box-shadow: inset 0 0 80px rgba(79, 195, 255, 0.08)`.
+- Secondary effect: 1px inset border at `rgba(200, 233, 255, 0.04)` to sharpen the edge.
+- Slow breath animation: `sc-viewport-breath` 8s infinite, opacity varying between 0.06 and 0.10 on the inset glow.
+- Under `prefers-reduced-motion`, the breath animation is removed; the frame stays static at the midpoint (opacity 0.08).
 
 ### 5.6 Section dividers
 
@@ -155,6 +181,17 @@ The existing `border-bottom` under `.section-head` gains a companion **scanline*
 - A 1px gradient line overlaid on the border, near-transparent by default.
 - When the section scrolls into view, the scanline brightens to `--sc-accent-glow` over 600ms, then dims to 15% over the next 1.2s and stays there.
 - Triggered via the existing `IntersectionObserver` pipeline (piggyback on `.in-view`).
+
+### 5.6a Stronger scroll-reveal motion
+
+The existing `.in-view` → `.in-view.shown` transition (`translateY(16px) → 0`, opacity `0 → 1`, duration 0.6s) is replaced by a more cinematic pop-in:
+
+- **Start state:** `opacity: 0; transform: translateY(32px) scale(0.98);`
+- **End state:** `opacity: 1; transform: translateY(0) scale(1);`
+- **Duration:** 0.8s, easing `var(--sc-ease-out-soft)`.
+- **Flash:** project cards additionally run a one-time `sc-card-flash` keyframe when they enter view — a brief cyan outer box-shadow pulse (0 → `--sc-accent-glow` → low-opacity baseline), 1.2s, then leaves the baseline shadow in place. Non-card `.in-view` elements do not flash.
+- Staggered delays (existing `el.style.transitionDelay = (i % 6) * 80 + 'ms'`) are preserved.
+- Under `prefers-reduced-motion`, all of the above are disabled: `.in-view` renders at rest-state immediately (opacity 1, no transform, no flash).
 
 ### 5.7 Grid layout for cards
 

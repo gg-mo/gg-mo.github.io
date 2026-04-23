@@ -14,6 +14,16 @@
 
 **Line numbers:** The original `index.html` has 524 lines. Line numbers in this plan refer to the **original** file only. After any edit, line numbers shift — when locating code in later tasks, **search by landmark string** (e.g., "find the `<nav class=\"top\">` block"), not by line number.
 
+**Execution order (updated after Phase A):** Tasks in this plan are grouped into execution phases. The phase order is:
+
+- **Phase A** (structural/content): Tasks 1 → 2 → 3 → 4 → 5 → 6 → 7. *(Already complete.)*
+- **Phase B** (ambient + hero hierarchy + scroll cue): Task 17 → 18 → 8 → 9 → 19 → 10.
+- **Phase C** (cards): Task 11.
+- **Phase D** (polish — hover, halo, scanline, reveal motion): Task 12 → 13 → 14 → 15 → 20.
+- **Final verification:** Task 16.
+
+Tasks 17–20 were added after Phase A per user direction (hero dominance, viewport border glow, scroll cue, stronger scroll-reveal). Find them at the bottom of this file.
+
 **File layout (unchanged):**
 ```
 index.html   ← all edits happen here
@@ -1288,6 +1298,351 @@ git commit --allow-empty -m "Verify full golden path, reduced-motion, responsive
 ```
 
 If any step fails, fix the underlying issue in its originating task, verify locally, and commit the fix with a message starting `Fix:`.
+
+---
+
+---
+
+## Task 17: Demote hero CTA and dim nav for hierarchy
+
+**Files:**
+- Modify: `index.html` — `.hero .btn.primary` CSS override (new) + `nav .links` CSS
+
+**Why:** Per spec §5.5 — "I build." must be unambiguously the loudest element. The hero CTA is demoted to a ghost outline button; nav links are dimmed one step further.
+
+- [ ] **Step 1: Add hero-scoped CTA override**
+
+Find the `.btn.ghost` rule block:
+
+```css
+.btn.ghost {
+  border-color: var(--sc-border);
+  color: var(--sc-text-secondary);
+}
+.btn.ghost:hover {
+  color: var(--sc-text);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+```
+
+Immediately after `.btn.ghost:hover`, add:
+
+```css
+.hero .btn.primary {
+  background: transparent;
+  color: var(--sc-text-secondary);
+  border-color: rgba(200, 233, 255, 0.25);
+  padding: 10px 16px;
+  font-size: 13px;
+}
+.hero .btn.primary:hover {
+  background: transparent;
+  color: var(--sc-text);
+  border-color: rgba(200, 233, 255, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px var(--sc-accent-glow);
+}
+```
+
+Note: the generic `.btn.primary:hover` rule (Task 14 target) still applies to CTAs *outside* the hero — but there are none in this site. This scoping is purely to enforce hierarchy.
+
+- [ ] **Step 2: Dim nav links**
+
+Find:
+
+```css
+nav .links {
+  display: flex;
+  gap: var(--sc-space-6);
+  font-size: 13px;
+  color: var(--sc-text-secondary);
+}
+nav .links a { transition: color 0.3s var(--sc-ease-in-out-soft); }
+nav .links a:hover { color: var(--sc-text); }
+```
+
+Replace with:
+
+```css
+nav .links {
+  display: flex;
+  gap: var(--sc-space-6);
+  font-size: 13px;
+  color: var(--sc-text-tertiary);
+}
+nav .links a { color: var(--sc-text-tertiary); transition: color 0.3s var(--sc-ease-in-out-soft); }
+nav .links a:hover { color: var(--sc-text-secondary); }
+```
+
+- [ ] **Step 3: Verify**
+
+Reload.
+
+Expected:
+- "I build." remains the loudest element.
+- "See the work →" button now has no filled background — thin cyan outline, dimmer text.
+- Nav links `Work / About / Links` are noticeably more muted than before, still readable.
+- On CTA hover: border and text brighten, halo appears.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html
+git commit -m "Demote hero CTA to ghost outline and dim nav for I-build dominance"
+```
+
+---
+
+## Task 18: Add viewport border glow frame
+
+**Files:**
+- Modify: `index.html` — add `<div class="viewport-frame">` markup and `.viewport-frame` CSS + `sc-viewport-breath` keyframes
+
+**Why:** Per spec §5.5b — subtle cyan glow around the inner edge of the viewport, suggesting a contained screen frame.
+
+- [ ] **Step 1: Add the markup**
+
+Find:
+
+```html
+<div class="backdrop" aria-hidden="true"></div>
+```
+
+Immediately after it, add:
+
+```html
+<div class="viewport-frame" aria-hidden="true"></div>
+```
+
+- [ ] **Step 2: Add the CSS**
+
+After the `.backdrop` / `.backdrop::before` rules, add:
+
+```css
+.viewport-frame {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow:
+    inset 0 0 0 1px rgba(200, 233, 255, 0.04),
+    inset 0 0 80px rgba(79, 195, 255, 0.08);
+  animation: sc-viewport-breath 8s var(--sc-ease-in-out-soft) infinite;
+}
+@keyframes sc-viewport-breath {
+  0%, 100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 233, 255, 0.04),
+      inset 0 0 80px rgba(79, 195, 255, 0.06);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 233, 255, 0.05),
+      inset 0 0 100px rgba(79, 195, 255, 0.10);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewport-frame {
+    animation: none;
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 233, 255, 0.04),
+      inset 0 0 80px rgba(79, 195, 255, 0.08);
+  }
+}
+```
+
+- [ ] **Step 3: Verify**
+
+Reload.
+
+Expected:
+- A very subtle cyan glow sits around the inner edge of the viewport.
+- The glow breathes slowly (~8s cycle) — barely visible, must be looked for.
+- Frame does not block any clicks (test by clicking nav links and CTAs — they still work).
+- Under `prefers-reduced-motion`: frame is static at the midpoint, no breath.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html
+git commit -m "Add breathing cyan viewport border glow (inset screen frame)"
+```
+
+---
+
+## Task 19: Add scroll-cue chevron under hero
+
+**Files:**
+- Modify: `index.html` — add `<div class="scroll-cue">` inside hero + CSS + `sc-bounce` keyframes + script-driven fade on scroll
+
+**Why:** Per spec §5.5a — nudges the user to scroll for more, fades away once they do.
+
+- [ ] **Step 1: Add markup inside the hero**
+
+Find the hero block (which currently ends after `</div>` of `.cta-row`):
+
+```html
+<section class="hero" id="top">
+  <h1 class="reveal shimmer" style="--d:0">I build.</h1>
+  <div class="cta-row reveal" style="--d:1">
+    <a class="btn primary" href="#work">
+      See the work
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+```
+
+Replace with:
+
+```html
+<section class="hero" id="top">
+  <h1 class="reveal shimmer" style="--d:0">I build.</h1>
+  <div class="cta-row reveal" style="--d:1">
+    <a class="btn primary" href="#work">
+      See the work
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+  <div class="scroll-cue reveal" style="--d:2" aria-hidden="true">↓</div>
+</section>
+```
+
+(If Task 10 has already added the `shimmer` class to the `<h1>`, keep it. If not, the above line reflects the post-Task-10 state — adjust as needed.)
+
+- [ ] **Step 2: Add the CSS**
+
+After the hero CTA styles (near `.btn .arrow` / `.btn:hover .arrow`), add:
+
+```css
+.scroll-cue {
+  margin-top: var(--sc-space-12);
+  font-size: 16px;
+  color: var(--sc-text-tertiary);
+  animation: sc-bounce 2s var(--sc-ease-in-out-soft) infinite;
+  transition: opacity 0.3s var(--sc-ease-in-out-soft);
+}
+.scroll-cue.hidden { opacity: 0; }
+@keyframes sc-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
+}
+```
+
+- [ ] **Step 3: Add scroll handler in script**
+
+Append to the existing `<script>` block (after whatever other blocks exist — at this point Tasks 9 and 10 have added parallax and shimmer handlers; add this next):
+
+```javascript
+  // Scroll cue: fade the chevron once the user has scrolled past the hero
+  const scrollCue = document.querySelector('.scroll-cue');
+  if (scrollCue) {
+    const THRESHOLD = 120;
+    let ticking = false;
+    const update = () => {
+      scrollCue.classList.toggle('hidden', window.scrollY > THRESHOLD);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+  }
+```
+
+- [ ] **Step 4: Verify**
+
+Reload.
+
+Expected:
+- A small `↓` sits below the CTA button, gently bouncing every 2 seconds.
+- Scroll down ≥120px: chevron fades out over 300ms.
+- Scroll back to top: chevron reappears.
+- Under `prefers-reduced-motion`: chevron is static (no bounce), but still fades on scroll (opacity transition is acceptable per reduced-motion guidelines).
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add index.html
+git commit -m "Add bouncing scroll-cue chevron that fades after user scrolls"
+```
+
+---
+
+## Task 20: Strengthen scroll-reveal motion (pop-in + card flash)
+
+**Files:**
+- Modify: `index.html` — `.in-view` CSS + add `.in-view.card` flash keyframes
+
+**Why:** Per spec §5.6a — existing fade-up is too subtle. Switch to a more cinematic pop-in and add a one-time cyan flash on project cards as they enter view.
+
+- [ ] **Step 1: Update `.in-view` / `.in-view.shown`**
+
+Find:
+
+```css
+.in-view {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s var(--sc-ease-out-soft),
+    transform 0.6s var(--sc-ease-out-soft);
+}
+.in-view.shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+Replace with:
+
+```css
+.in-view {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  transition:
+    opacity 0.8s var(--sc-ease-out-soft),
+    transform 0.8s var(--sc-ease-out-soft);
+}
+.in-view.shown {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.card.in-view.shown {
+  animation: sc-card-flash 1.2s var(--sc-ease-out-soft) 0s 1;
+}
+@keyframes sc-card-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(79, 195, 255, 0); }
+  40%  { box-shadow: 0 0 28px 2px var(--sc-accent-glow); }
+  100% { box-shadow: 0 0 0 0 rgba(79, 195, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card.in-view.shown { animation: none; }
+}
+```
+
+Note: the existing reduced-motion block (`.in-view { opacity: 1 !important; transform: none !important; transition: none !important; }`) already handles the base `.in-view` / `.in-view.shown` reduced-motion case — no further change needed there.
+
+- [ ] **Step 2: Verify**
+
+Reload.
+
+Expected:
+- Scrolling into any section/card produces a more pronounced pop-in: elements rise 32px (up from 16px) with a slight scale-up.
+- Project cards additionally flash a brief cyan glow as they enter view — the flash peaks around 40% of the animation (~480ms in), then fades to nothing by 1200ms. The hover glow (added in Task 12) is unaffected and still works independently.
+- Under `prefers-reduced-motion`: all reveals are instant, no flash.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "Strengthen scroll-reveal motion and add cyan flash on cards entering view"
+```
 
 ---
 
