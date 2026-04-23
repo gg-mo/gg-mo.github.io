@@ -315,6 +315,7 @@ section {
   transition:
     background 0.4s var(--sc-ease-in-out-soft),
     border-color 0.4s var(--sc-ease-in-out-soft),
+    box-shadow 0.4s var(--sc-ease-in-out-soft),
     transform 0.5s var(--sc-ease-out-soft);
   grid-column: span 6;
 }
@@ -323,8 +324,9 @@ section {
 }
 .card:hover {
   background: var(--sc-surface-2);
-  border-color: rgba(255, 255, 255, 0.10);
+  border-color: rgba(200, 233, 255, 0.18);
   transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(200, 233, 255, 0.08), 0 12px 40px var(--sc-accent-glow);
 }
 .card .tag {
   font-size: 12px;
