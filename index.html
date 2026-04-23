@@ -88,7 +88,7 @@ a:focus-visible, button:focus-visible {
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 85%);
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 85%);
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(var(--grid-x, 0), var(--grid-y, 0), 0);
   will-change: transform;
 }
 
@@ -576,6 +576,32 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
     el.style.transitionDelay = (i % 6) * 80 + 'ms';
     io.observe(el);
   });
+
+  // Grid backdrop mouse parallax (skipped under reduced motion)
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const backdrop = document.querySelector('.backdrop');
+  if (!reduceMotion && backdrop) {
+    let tx = 0, ty = 0, rx = 0, ry = 0, raf = 0;
+    const MAX = 4;
+    const tick = () => {
+      rx += (tx - rx) * 0.08;
+      ry += (ty - ry) * 0.08;
+      backdrop.style.setProperty('--grid-x', rx.toFixed(2) + 'px');
+      backdrop.style.setProperty('--grid-y', ry.toFixed(2) + 'px');
+      if (Math.abs(tx - rx) > 0.05 || Math.abs(ty - ry) > 0.05) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = 0;
+      }
+    };
+    window.addEventListener('mousemove', (e) => {
+      const cx = e.clientX / window.innerWidth - 0.5;
+      const cy = e.clientY / window.innerHeight - 0.5;
+      tx = -cx * MAX * 2;
+      ty = -cy * MAX * 2;
+      if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+  }
 </script>
 
 </body>
