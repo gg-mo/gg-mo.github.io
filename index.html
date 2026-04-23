@@ -117,10 +117,10 @@ nav .links {
   display: flex;
   gap: var(--sc-space-6);
   font-size: 13px;
-  color: var(--sc-text-secondary);
+  color: var(--sc-text-tertiary);
 }
-nav .links a { transition: color 0.3s var(--sc-ease-in-out-soft); }
-nav .links a:hover { color: var(--sc-text); }
+nav .links a { color: var(--sc-text-tertiary); transition: color 0.3s var(--sc-ease-in-out-soft); }
+nav .links a:hover { color: var(--sc-text-secondary); }
 
 /* Hero — focal */
 .hero {
@@ -190,6 +190,20 @@ h1 .muted {
 .btn.ghost:hover {
   color: var(--sc-text);
   border-color: rgba(255, 255, 255, 0.14);
+}
+.hero .btn.primary {
+  background: transparent;
+  color: var(--sc-text-secondary);
+  border-color: rgba(200, 233, 255, 0.25);
+  padding: 10px 16px;
+  font-size: 13px;
+}
+.hero .btn.primary:hover {
+  background: transparent;
+  color: var(--sc-text);
+  border-color: rgba(200, 233, 255, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px var(--sc-accent-glow);
 }
 .btn .arrow { transition: transform 0.3s var(--sc-ease-out-soft); }
 .btn:hover .arrow { transform: translateX(3px); }
