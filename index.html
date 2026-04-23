@@ -122,6 +122,26 @@ a:focus-visible, button:focus-visible {
   }
 }
 
+/* Global cursor spotlight — a soft cyan light that follows the mouse */
+.cursor-light {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    360px circle at var(--cx, -999px) var(--cy, -999px),
+    rgba(79, 195, 255, 0.10),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.4s var(--sc-ease-in-out-soft);
+}
+body.cursor-active .cursor-light { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .cursor-light { display: none; }
+}
+
 .container {
   position: relative;
   z-index: 1;
@@ -129,41 +149,6 @@ a:focus-visible, button:focus-visible {
   margin: 0 auto;
   padding: 0 var(--sc-space-6);
 }
-
-/* Nav */
-nav.top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--sc-space-6) var(--sc-space-6);
-  max-width: 1080px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-.mark {
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: -0.01em;
-}
-.mark .dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--sc-text);
-  border-radius: 50%;
-  margin-right: 10px;
-  vertical-align: middle;
-  transform: translateY(-1px);
-}
-nav .links {
-  display: flex;
-  gap: var(--sc-space-6);
-  font-size: 13px;
-  color: var(--sc-text-tertiary);
-}
-nav .links a { color: var(--sc-text-tertiary); transition: color 0.3s var(--sc-ease-in-out-soft); }
-nav .links a:hover { color: var(--sc-text-secondary); }
 
 /* Hero — focal */
 .hero {
@@ -196,64 +181,6 @@ h1 .muted {
   line-height: 1.5;
   color: var(--sc-text-secondary);
 }
-.cta-row {
-  margin-top: var(--sc-space-12);
-  display: flex;
-  gap: var(--sc-space-3);
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border-radius: var(--sc-radius-sm);
-  font-size: 14px;
-  font-weight: 500;
-  transition:
-    background 0.3s var(--sc-ease-in-out-soft),
-    border-color 0.3s var(--sc-ease-in-out-soft),
-    color 0.3s var(--sc-ease-in-out-soft),
-    box-shadow 0.3s var(--sc-ease-in-out-soft),
-    transform 0.3s var(--sc-ease-out-soft);
-  border: 1px solid transparent;
-  cursor: pointer;
-  background: none;
-  color: var(--sc-text);
-}
-.btn.primary {
-  background: var(--sc-accent);
-  color: #0a0a0b;
-}
-.btn.primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 24px var(--sc-accent-glow);
-}
-.btn.ghost {
-  border-color: var(--sc-border);
-  color: var(--sc-text-secondary);
-}
-.btn.ghost:hover {
-  color: var(--sc-text);
-  border-color: rgba(255, 255, 255, 0.14);
-}
-.hero .btn.primary {
-  background: transparent;
-  color: var(--sc-text-secondary);
-  border-color: rgba(200, 233, 255, 0.25);
-  padding: 10px 16px;
-  font-size: 13px;
-}
-.hero .btn.primary:hover {
-  background: transparent;
-  color: var(--sc-text);
-  border-color: rgba(200, 233, 255, 0.45);
-  transform: translateY(-1px);
-  box-shadow: 0 0 20px var(--sc-accent-glow);
-}
-.btn .arrow { transition: transform 0.3s var(--sc-ease-out-soft); }
-.btn:hover .arrow { transform: translateX(3px); }
 .scroll-cue {
   margin-top: var(--sc-space-12);
   font-size: 16px;
@@ -463,7 +390,7 @@ section {
   color: var(--sc-text-tertiary);
 }
 
-/* About */
+/* Links block (grid layout shared with the Links section) */
 .about {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -484,10 +411,9 @@ section {
   line-height: 1.5;
   color: var(--sc-text);
   font-weight: 400;
-  margin: 0 0 var(--sc-space-4);
+  margin: 0;
   letter-spacing: -0.005em;
 }
-.about p + p { color: var(--sc-text-secondary); font-size: 17px; }
 
 /* Footer */
 footer {
@@ -525,38 +451,23 @@ footer .end-of-line {
   to   { opacity: 1; }
 }
 
-@keyframes sc-shimmer {
-  0%   { background-position: -150% 0; }
-  100% { background-position: 250% 0; }
+.caret {
+  display: inline-block;
+  margin-left: 0.08em;
+  color: var(--sc-accent-deep);
+  font-family: var(--sc-mono);
+  font-weight: 400;
+  animation: sc-caret-blink 1.05s steps(1, end) infinite;
 }
-.hero h1.shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--sc-text) 0%,
-    var(--sc-text) 40%,
-    var(--sc-accent-deep) 50%,
-    var(--sc-text) 60%,
-    var(--sc-text) 100%
-  );
-  background-size: 200% 100%;
-  background-position: -150% 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation:
-    sc-fade-up 0.6s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 200ms) forwards,
-    sc-shimmer 1.2s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 800ms) 1 forwards;
+@keyframes sc-caret-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero h1.shimmer {
-    background: none;
-    color: var(--sc-text);
-    animation: none;
-  }
+  .caret { animation: none; opacity: 0.7; }
 }
 
 body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
-nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 
 .reveal {
   opacity: 0;
@@ -589,34 +500,20 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body, nav.top, .reveal { animation: none !important; opacity: 1 !important; transform: none !important; }
+  body, .reveal { animation: none !important; opacity: 1 !important; transform: none !important; }
   .in-view { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 </style>
 </head>
 <body>
 <div class="backdrop" aria-hidden="true"></div>
+<div class="cursor-light" aria-hidden="true"></div>
 <div class="viewport-frame" aria-hidden="true"></div>
-
-<nav class="top">
-  <div class="mark"><span class="dot"></span>Gao Mo</div>
-  <div class="links">
-    <a href="#work">Work</a>
-    <a href="#about">About</a>
-    <a href="#links">Links</a>
-  </div>
-</nav>
 
 <main class="container">
 
   <section class="hero" id="top">
-    <h1 class="reveal shimmer" style="--d:0">I build.</h1>
-    <div class="cta-row reveal" style="--d:1">
-      <a class="btn primary" href="#work">
-        See the work
-        <span class="arrow" aria-hidden="true">→</span>
-      </a>
-    </div>
+    <h1 class="reveal" style="--d:0">I build.<span class="caret" aria-hidden="true">_</span></h1>
     <div class="scroll-cue reveal" style="--d:2" aria-hidden="true">↓</div>
   </section>
 
@@ -705,19 +602,6 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
     </div>
   </section>
 
-  <section id="about">
-    <div class="section-head in-view">
-      <h2>About</h2>
-      <span class="kicker">Short version</span>
-    </div>
-    <div class="about in-view">
-      <div class="label">Notes</div>
-      <div>
-        <p>I build tools for thinking — agent skills, ML systems, and the quiet interfaces that make models feel inevitable.</p>
-      </div>
-    </div>
-  </section>
-
   <section id="links">
     <div class="section-head in-view">
       <h2>Links</h2>
@@ -787,13 +671,23 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
     }, { passive: true });
   }
 
-  // Hero shimmer one-shot: after animation, drop shimmer class so text stays solid
-  const heroH1 = document.querySelector('.hero h1.shimmer');
-  if (heroH1) {
-    heroH1.addEventListener('animationend', (e) => {
-      if (e.animationName === 'sc-shimmer') {
-        heroH1.classList.remove('shimmer');
-      }
+  // Global cursor spotlight (skipped under reduced motion)
+  if (!reduceMotion) {
+    let cpending = false;
+    window.addEventListener('mousemove', (e) => {
+      if (cpending) return;
+      cpending = true;
+      requestAnimationFrame(() => {
+        document.body.style.setProperty('--cx', e.clientX + 'px');
+        document.body.style.setProperty('--cy', e.clientY + 'px');
+        if (!document.body.classList.contains('cursor-active')) {
+          document.body.classList.add('cursor-active');
+        }
+        cpending = false;
+      });
+    }, { passive: true });
+    window.addEventListener('mouseleave', () => {
+      document.body.classList.remove('cursor-active');
     });
   }
 
