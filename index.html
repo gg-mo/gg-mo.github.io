@@ -216,6 +216,7 @@ h1 .muted {
     background 0.3s var(--sc-ease-in-out-soft),
     border-color 0.3s var(--sc-ease-in-out-soft),
     color 0.3s var(--sc-ease-in-out-soft),
+    box-shadow 0.3s var(--sc-ease-in-out-soft),
     transform 0.3s var(--sc-ease-out-soft);
   border: 1px solid transparent;
   cursor: pointer;
@@ -226,7 +227,10 @@ h1 .muted {
   background: var(--sc-accent);
   color: #0a0a0b;
 }
-.btn.primary:hover { transform: translateY(-1px); }
+.btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px var(--sc-accent-glow);
+}
 .btn.ghost {
   border-color: var(--sc-border);
   color: var(--sc-text-secondary);
