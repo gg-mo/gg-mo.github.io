@@ -122,20 +122,33 @@ a:focus-visible, button:focus-visible {
   }
 }
 
-/* Global cursor spotlight — a soft cyan light that follows the mouse */
+/* Global cursor spotlight — a soft cyan light that trails the mouse.
+   Two-stop gradient (hot core + long tail) and a slow lerp in JS
+   give it an ambient, "intelligence-glow" feel rather than a 1:1 cursor. */
 .cursor-light {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 2;
   mix-blend-mode: screen;
-  background: radial-gradient(
-    360px circle at var(--cx, -999px) var(--cy, -999px),
-    rgba(79, 195, 255, 0.10),
-    transparent 65%
-  );
+  background:
+    radial-gradient(
+      180px circle at var(--cx, -999px) var(--cy, -999px),
+      rgba(120, 210, 255, 0.18),
+      transparent 70%
+    ),
+    radial-gradient(
+      560px circle at var(--cx, -999px) var(--cy, -999px),
+      rgba(79, 195, 255, 0.10),
+      transparent 72%
+    );
   opacity: 0;
-  transition: opacity 0.4s var(--sc-ease-in-out-soft);
+  transition: opacity 0.8s var(--sc-ease-in-out-soft);
+  animation: sc-cursor-breath 9s var(--sc-ease-in-out-soft) infinite;
+}
+@keyframes sc-cursor-breath {
+  0%, 100% { filter: brightness(0.95); }
+  50%      { filter: brightness(1.1);  }
 }
 body.cursor-active .cursor-light { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
@@ -688,20 +701,33 @@ body { animation: sc-scene-enter 0.8s var(--sc-ease-out-soft) both; }
     }, { passive: true });
   }
 
-  // Global cursor spotlight (skipped under reduced motion)
+  // Global cursor spotlight — slow-trailing lerp for an ambient feel
   if (!reduceMotion) {
-    let cpending = false;
+    let targetX = -999, targetY = -999;
+    let renderX = -999, renderY = -999;
+    let raf = 0;
+    const EASE = 0.08; // lower = more trail
+    const tick = () => {
+      const dx = targetX - renderX;
+      const dy = targetY - renderY;
+      renderX += dx * EASE;
+      renderY += dy * EASE;
+      document.body.style.setProperty('--cx', renderX.toFixed(1) + 'px');
+      document.body.style.setProperty('--cy', renderY.toFixed(1) + 'px');
+      if (Math.abs(dx) > 0.25 || Math.abs(dy) > 0.25) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = 0;
+      }
+    };
     window.addEventListener('mousemove', (e) => {
-      if (cpending) return;
-      cpending = true;
-      requestAnimationFrame(() => {
-        document.body.style.setProperty('--cx', e.clientX + 'px');
-        document.body.style.setProperty('--cy', e.clientY + 'px');
-        if (!document.body.classList.contains('cursor-active')) {
-          document.body.classList.add('cursor-active');
-        }
-        cpending = false;
-      });
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (renderX === -999) { renderX = targetX; renderY = targetY; }
+      if (!document.body.classList.contains('cursor-active')) {
+        document.body.classList.add('cursor-active');
+      }
+      if (!raf) raf = requestAnimationFrame(tick);
     }, { passive: true });
     window.addEventListener('mouseleave', () => {
       document.body.classList.remove('cursor-active');
