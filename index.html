@@ -286,6 +286,30 @@ section {
   padding-bottom: var(--sc-space-8);
   margin-bottom: var(--sc-space-8);
   border-bottom: 1px solid var(--sc-border);
+  position: relative;
+}
+.section-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sc-accent-glow), transparent);
+  opacity: 0;
+  transition: opacity 0.6s var(--sc-ease-in-out-soft);
+}
+.section-head.shown::after {
+  opacity: 1;
+  animation: sc-scanline-fade 1.8s var(--sc-ease-in-out-soft) forwards;
+}
+@keyframes sc-scanline-fade {
+  0%   { opacity: 0; }
+  33%  { opacity: 1; }
+  100% { opacity: 0.15; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-head::after { animation: none; opacity: 0.15; }
 }
 .section-head h2 {
   font-size: 32px;
