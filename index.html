@@ -251,6 +251,21 @@ h1 .muted {
 }
 .btn .arrow { transition: transform 0.3s var(--sc-ease-out-soft); }
 .btn:hover .arrow { transform: translateX(3px); }
+.scroll-cue {
+  margin-top: var(--sc-space-12);
+  font-size: 16px;
+  color: var(--sc-text-tertiary);
+  animation: sc-bounce 2s var(--sc-ease-in-out-soft) infinite;
+  transition: opacity 0.3s var(--sc-ease-in-out-soft);
+}
+.scroll-cue.hidden { opacity: 0; }
+@keyframes sc-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
+}
 
 /* Section scaffold */
 section {
@@ -460,6 +475,7 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
         <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
+    <div class="scroll-cue reveal" style="--d:2" aria-hidden="true">↓</div>
   </section>
 
   <section id="work">
@@ -600,6 +616,23 @@ nav.top { animation: sc-fade-in 0.5s var(--sc-ease-in-out-soft) 0.1s both; }
       tx = -cx * MAX * 2;
       ty = -cy * MAX * 2;
       if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+  }
+
+  // Scroll cue: fade the chevron once the user has scrolled past the hero
+  const scrollCue = document.querySelector('.scroll-cue');
+  if (scrollCue) {
+    const THRESHOLD = 120;
+    let ticking = false;
+    const update = () => {
+      scrollCue.classList.toggle('hidden', window.scrollY > THRESHOLD);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
     }, { passive: true });
   }
 </script>
