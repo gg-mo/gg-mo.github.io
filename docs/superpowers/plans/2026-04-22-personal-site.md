@@ -676,7 +676,9 @@ Find the existing motion section (starts with `/* Motion */` comment). After the
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: sc-shimmer 1.2s var(--sc-ease-out-soft) 0.6s 1 forwards;
+  animation:
+    sc-fade-up 0.6s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 200ms) forwards,
+    sc-shimmer 1.2s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 800ms) 1 forwards;
 }
 @media (prefers-reduced-motion: reduce) {
   .hero h1.shimmer {
@@ -1519,8 +1521,12 @@ After the hero CTA styles (near `.btn .arrow` / `.btn:hover .arrow`), add:
   margin-top: var(--sc-space-12);
   font-size: 16px;
   color: var(--sc-text-tertiary);
-  animation: sc-bounce 2s var(--sc-ease-in-out-soft) infinite;
   transition: opacity 0.3s var(--sc-ease-in-out-soft);
+}
+.scroll-cue.reveal {
+  animation:
+    sc-fade-up 0.6s var(--sc-ease-out-soft) calc(var(--d, 0) * 120ms + 200ms) forwards,
+    sc-bounce 2s var(--sc-ease-in-out-soft) calc(var(--d, 0) * 120ms + 800ms) infinite;
 }
 .scroll-cue.hidden { opacity: 0; }
 @keyframes sc-bounce {
